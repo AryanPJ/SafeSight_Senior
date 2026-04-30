@@ -1,0 +1,12 @@
+{
+    // Settings for the "vscode-pandoc" extension
+    "pandoc.pdfOptString": "--filter pandoc-crossref --citeproc --csl=ieee.csl --number-sections -V geometry:margin=1in -V fontsize=12pt",
+    "pandoc.htmlOptString": "--filter pandoc-crossref --citeproc --csl=ieee.csl --number-sections --toc --self-contained",
+    
+    // Settings for "Pandoc Citer" extension
+    "pandoc-citer.citationFile": "references.bib",
+
+    // General settings
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+}
