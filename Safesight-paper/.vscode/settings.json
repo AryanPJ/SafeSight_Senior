@@ -1,0 +1,42 @@
+{
+    // ── Pandoc build flags ──────────────────────────────────────
+    // These are passed automatically when you press Ctrl+K then P
+    // and choose "pdf", "docx", or "html".
+    //
+    // If you don't have pandoc-crossref installed, remove the
+    // --filter pandoc-crossref part from each line below.
+
+    "pandoc.pdfOptString": "--citeproc --number-sections -V geometry:margin=1in -V fontsize=12pt",
+    "pandoc.docxOptString": "--citeproc --number-sections",
+    "pandoc.htmlOptString": "--citeproc --number-sections --standalone",
+
+    // ── Pandoc Citer ────────────────────────────────────────────
+    // Reads your .bib file so typing @ autocompletes citation keys.
+    // This path is relative to the workspace root.
+    "PandocCiter.DefaultBib": "references.bib",
+
+    // Show both cite key and title in the autocomplete menu
+    "PandocCiter.ShowTitlesInSuggestions": true,
+
+    // ── Spell checker ───────────────────────────────────────────
+    // Add technical terms here so they don't get flagged
+    "cSpell.words": [
+        "pandoc",
+        "crossref",
+        "citeproc",
+        "BibTeX",
+        "ieee"
+    ],
+
+    // ── Editor preferences for markdown ─────────────────────────
+    "[markdown]": {
+        "editor.wordWrap": "on",
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": false
+        },
+        // Keeps @ autocomplete responsive
+        "editor.suggestOnTriggerCharacters": true
+    }
+}
