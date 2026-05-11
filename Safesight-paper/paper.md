@@ -40,32 +40,25 @@ header-includes: |
 
 # Abstract {-}
 
-**Polish this/add discussion of previous works** 
 
-While modern Advanced Driver Assistance Systems (ADAS) effectively mitigate human-error accidents, previous implementations rely heavily on proprietary, high-cost sensor arrays (such as LiDAR and radar) that restrict these safety features to premium vehicles. This project addresses this accessibility gap by developing a low-cost, strictly vision-based ADAS framework engineered to democratize safety through affordable edge-computing hardware. The system merges lightweight deep learning (YOLOv8n) with classical geometric computer vision—specifically Canny Edge detection, Hough Transforms, and Exponential Moving Averages (EMA)—to create a robust perceptual safety buffer. Designed for deployment on microcomputers like the Raspberry Pi 5, the architecture executes spatial blindspot monitoring, monocular depth estimation for forward collision warnings, and dynamic lane departure tracking. Real-world testing confirmed the system's viability, achieving a consistent 5–6 FPS processing rate with highly stabilized lane-polygon locks and accurate LiDAR-free proximity alerts, successfully proving that life-saving predictive safety can be achieved on economy hardware.
-
+Modern Advanced Driver Assistance Systems (ADAS) significantly reduce human-error-related traffic accidents; however, their reliance on proprietary, high-cost sensor arrays—such as LiDAR and millimeter-wave radar—restricts these critical safety features to premium vehicles. Thus, older vehicles and even some newer more economical vehicles do not get access to these safety enhancing features. To address this accessibility gap, this project introduces a low-cost, strictly vision-based ADAS framework engineered to democratize vehicle safety using affordable edge-computing hardware. The proposed system synthesizes lightweight deep learning (YOLOv8n) with classical geometric computer vision techniques, including Canny Edge Detection, Hough Transforms, and Exponential Moving Averages (EMA), to generate a robust perceptual safety buffer. Designed specifically for deployment on resource-constrained microcomputers like the Raspberry Pi 5, the architecture successfully executes spatial blindspot monitoring, monocular depth estimation for forward collision warnings, and dynamic lane departure tracking. Real-world testing validates the system's efficacy, achieving a consistent 5–6 FPS processing rate alongside highly stabilized lane-tracking locks and accurate, LiDAR-free proximity alerts. Ultimately, this research demonstrates that life-saving predictive safety technologies can be viably retrofitted using economy hardware.
 
 # Introduction
-**Shallow right now**
+Traffic accidents represent a critical global health crisis, with human error—such as driver distraction, delayed reaction times, and spatial inattentional blindness—accounting for the vast majority of motor vehicle collisions. While the advent of Advanced Driver Assistance Systems (ADAS) has proven highly effective at mitigating these risks, these life-saving technologies remain locked behind a significant financial paywall. Currently, millions of older, economy-class vehicles on the road lack even basic predictive safety features. The primary motivation of this research is to democratize road safety by engineering a low-cost, retrofittable driver aid system capable of providing modern ADAS capabilities to older vehicles.
 
-1. Motivation & Context (The Problem)
-  - The Global Issue: Start with the human cost. Briefly mention that human error (distraction, blindspots, delayed reaction) is the leading cause of traffic accidents.
-  - The Accessibility Gap (The "Why"): Explain that while Advanced Driver Assistance Systems (ADAS) solve this problem, they are locked behind a paywall. Emphasize the millions of older vehicles on the road that lack these basic safety features.
-  - our Mission: To be able to retrofit older vehicles with new driver aid systems for safety at a low cost 
-2. Existing Solutions & Their Limitations
-  - Current High-End Tech: Describe how modern factory ADAS works (e.g., Tesla, high-end Mercedes). Mention their reliance on sensor fusion.
-  - The Hardware Limitations: Explicitly name the proprietary sensors they use: LiDAR arrays, millimeter-wave (mmWave) radar, and high-end AI compute units (like NVIDIA Drive).
-  - The Financial/Structural Limitations: Point out that these existing solutions cost thousands of dollars, require heavy power consumption, and cannot be easily or cheaply installed into a standard 2010 sedan.
-3. The SafeSight Solution (Paper Summary / Project Overview)
-  - The Pivot to Vision & Edge AI: Introduce SafeSight. Explain that you are replacing expensive sensor hardware with smart software.
-  - The Core Concept: Summarize your methodology briefly: using a standard, cheap camera feed processed locally on an affordable microcomputer (Raspberry Pi 5).
-  - The Hybrid Approach: Mention that you are combining lightweight neural networks (YOLOv8n) with classical mathematics (Hough Transforms, EMA) to make it run fast enough on low-end hardware.
-4. Contributions & Final Results (What You Accomplished)
--  The New Contribution: Clearly state what you brought to the table. (e.g., "This project contributes a highly optimized, purely vision-based perception pipeline that proves life-saving ADAS logic can be executed on a $80 microcomputer.")
-  - Accomplished System 1 (Blindspot): Detail that you successfully built a spatial geometric "No-Zone" mapping system achieving a 95% True Positive detection rate.
-  - Accomplished System 2 (Lane Departure): Detail that you implemented a robust Lane Departure Warning system, uniquely stabilized by an Exponential Moving Average (EMA) to prevent polygon flickering.
-  - Accomplished System 3 (Collision Warning): Detail that you engineered a LiDAR-free, monocular depth-estimation tool 
-  - Overall Hardware Result: Conclude by stating the system is finished and successfully runs localized, concurrent video feeds at 5–6 FPS on the Raspberry Pi 5.
+Modern factory-installed ADAS, such as those deployed by Tesla or Mercedes-Benz, rely heavily on complex sensor fusion architectures. These systems integrate data from proprietary, high-cost sensors, including LiDAR arrays, millimeter-wave (mmWave) radar, and high-end centralized AI compute units like the NVIDIA Drive platform. Consequently, these solutions are burdened by severe financial and structural limitations; they cost thousands of dollars, demand heavy power consumption, and cannot be practically or economically integrated into a standard older vehicle, such as a 2010 sedan.
+
+To bridge this accessibility gap, we introduce SafeSight: a purely vision-based perception pipeline that replaces expensive proprietary sensor hardware with optimized, smart software. The core concept of SafeSight is to utilize a standard, low-cost monocular camera feed processed entirely on accessible edge-computing hardware, specifically the Raspberry Pi 5. Because standard neural networks are too computationally expensive for localized microcomputers, SafeSight employs a hybrid algorithmic approach. By synthesizing lightweight deep learning (YOLOv8n) for high-level object classification with classical computer vision mathematics—such as Hough Transforms and Exponential Moving Averages (EMA)—the system maintains the processing speeds necessary for real-time hazard detection.
+
+The primary contribution of this paper is demonstrating that a highly optimized, purely vision-based perception pipeline can execute life-saving ADAS logic on an $80 microcomputer without relying on cloud connectivity or active sensor arrays. Through this architecture, we successfully engineered three core subsystems:
+
+Blindspot Detection: A spatial geometric "No-Zone" mapping system that achieves a 95% True Positive detection rate for adjacent vehicles.
+
+Lane Departure Warning (LDW): A robust lane-tracking system uniquely stabilized by an Exponential Moving Average (EMA) algorithm, effectively eliminating visual polygon flickering across sequential frames.
+
+Forward Collision Warning: A LiDAR-free, monocular depth-estimation tool that accurately calculates vehicle proximity using pinhole camera geometry.
+
+Ultimately, this project culminates in a fully localized, functional system capable of running concurrent video safety feeds at a stable 5–6 Frames Per Second (FPS) on the Raspberry Pi 5, proving that advanced predictive safety can be effectively and affordably retrofitted.
 
 
 <!-- ── Citation examples ────────────────────────────────────── -->
