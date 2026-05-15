@@ -41,24 +41,24 @@ header-includes: |
 # Abstract {-}
 
 
-Modern Advanced Driver Assistance Systems (ADAS) significantly reduce human-error-related traffic accidents; however, their reliance on proprietary, high-cost sensor arrays—such as LiDAR and millimeter-wave radar—restricts these critical safety features to premium vehicles. Thus, older vehicles and even some newer more economical vehicles do not get access to these safety enhancing features. To address this accessibility gap, this project introduces a low-cost, strictly vision-based ADAS framework engineered to democratize vehicle safety using affordable edge-computing hardware. The proposed system synthesizes lightweight deep learning (YOLOv8n) with classical geometric computer vision techniques, including Canny Edge Detection, Hough Transforms, and Exponential Moving Averages (EMA), to generate a robust perceptual safety buffer. Designed specifically for deployment on resource-constrained microcomputers like the Raspberry Pi 5, the architecture successfully executes spatial blindspot monitoring, monocular depth estimation for forward collision warnings, and dynamic lane departure tracking. Real-world testing validates the system's efficacy, achieving a consistent 5–6 FPS processing rate alongside highly stabilized lane-tracking locks and accurate, LiDAR-free proximity alerts. Ultimately, this research demonstrates that life-saving predictive safety technologies can be viably retrofitted using economy hardware.
+Modern Advanced Driver Assistance Systems (ADAS) significantly reduce human-error-related traffic accidents; however, their reliance on proprietary, high-cost sensor arrays—such as LiDAR and millimeter-wave radar—restricts these critical safety features to premium vehicles. Thus, older vehicles and even some newer more economical vehicles do not get access to these safety enhancing features. To address this accessibility gap, this project introduces a low-cost, strictly vision-based ADAS framework engineered to democratize vehicle safety using affordable edge-computing hardware. The proposed system synthesizes lightweight deep learning (YOLOv8n) with classical geometric computer vision techniques, including Canny Edge Detection, Hough Transforms, and Exponential Moving Averages (EMA), to generate a robust perceptual safety buffer. Designed specifically for deployment on resource-constrained microcomputers like the Raspberry Pi 5, the architecture successfully executes spatial blindspot monitoring, monocular depth estimation for forward collision warnings, and dynamic lane departure tracking. Real-world testing validates the system's efficacy, achieving a consistent 3–6 FPS processing rate alongside highly stabilized lane-tracking locks and accurate, LiDAR-free proximity alerts. Ultimately, this research demonstrates that life-saving predictive safety technologies can be viably retrofitted using economy hardware.
 
 # Introduction
 Traffic accidents represent a critical global health crisis, with human error—such as driver distraction, delayed reaction times, and spatial inattentional blindness—accounting for the vast majority of motor vehicle collisions. While the advent of Advanced Driver Assistance Systems (ADAS) has proven highly effective at mitigating these risks, these life-saving technologies remain locked behind a significant financial paywall. Currently, millions of older, economy-class vehicles on the road lack even basic predictive safety features. The primary motivation of this research is to democratize road safety by engineering a low-cost, retrofittable driver aid system capable of providing modern ADAS capabilities to older vehicles.
 
-Modern factory-installed ADAS, such as those deployed by Tesla or Mercedes-Benz, rely heavily on complex sensor fusion architectures. These systems integrate data from proprietary, high-cost sensors, including LiDAR arrays, millimeter-wave (mmWave) radar, and high-end centralized AI compute units like the NVIDIA Drive platform. Consequently, these solutions are burdened by severe financial and structural limitations; they cost thousands of dollars, demand heavy power consumption, and cannot be practically or economically integrated into a standard older vehicle, such as a 2010 sedan.
+Modern factory-installed ADAS, such as those deployed by Tesla or Mercedes-Benz, rely heavily on complex sensor fusion architectures. These systems integrate data from proprietary, high-cost sensors, including LiDAR arrays, millimeter-wave (mmWave) radar [@ingle2016tesla]. Consequently, these solutions are burdened by severe financial and structural limitations; they cost thousands of dollars, demand heavy power consumption, and cannot be practically or economically integrated into a standard older vehicle, such as a 2010 sedan.
 
 To bridge this accessibility gap, we introduce SafeSight: a purely vision-based perception pipeline that replaces expensive proprietary sensor hardware with optimized, smart software. The core concept of SafeSight is to utilize a standard, low-cost monocular camera feed processed entirely on accessible edge-computing hardware, specifically the Raspberry Pi 5. Because standard neural networks are too computationally expensive for localized microcomputers, SafeSight employs a hybrid algorithmic approach. By synthesizing lightweight deep learning (YOLOv8n) for high-level object classification with classical computer vision mathematics—such as Hough Transforms and Exponential Moving Averages (EMA)—the system maintains the processing speeds necessary for real-time hazard detection.
 
-The primary contribution of this paper is demonstrating that a highly optimized, purely vision-based perception pipeline can execute life-saving ADAS logic on an $80 microcomputer without relying on cloud connectivity or active sensor arrays. Through this architecture, we successfully engineered three core subsystems:
+The primary contribution of this paper is demonstrating that a highly optimized, purely vision-based perception pipeline can execute life-saving ADAS logic on an readily available local computer, Raspberry Pi 5,  without relying on cloud connectivity while also being fast enough to respond to threats accordingly. 
 
-Blindspot Detection: A spatial geometric "No-Zone" mapping system that achieves a 95% True Positive detection rate for adjacent vehicles.
+Blindspot Detection: A spatial geometric "No-Zone" mapping system that detects and warns the user if any car is in their blindspot. 
 
 Lane Departure Warning (LDW): A robust lane-tracking system uniquely stabilized by an Exponential Moving Average (EMA) algorithm, effectively eliminating visual polygon flickering across sequential frames.
 
-Forward Collision Warning: A LiDAR-free, monocular depth-estimation tool that accurately calculates vehicle proximity using pinhole camera geometry.
+Forward Collision Warning: A LiDAR-free, monocular depth-estimation tool that accurately calculates vehicle proximity using  camera geometry.
 
-Ultimately, this project culminates in a fully localized, functional system capable of running concurrent video safety feeds at a stable 5–6 Frames Per Second (FPS) on the Raspberry Pi 5, proving that advanced predictive safety can be effectively and affordably retrofitted.
+Ultimately, this project culminates in a fully localized, functional system capable of running concurrent video safety feeds at a stable 3–6 Frames Per Second (FPS) on the Raspberry Pi 5, proving that advanced predictive safety can be effectively and affordably retrofitted.
 
 
 <!-- ── Citation examples ────────────────────────────────────── -->
@@ -74,20 +74,29 @@ Ultimately, this project culminates in a fully localized, functional system capa
 
 
 # Procedure
-1. Software & Algorithms
-  - Core Libraries: OpenCV (image processing), Ultralytics (YOLO deployment), NumPy (matrix math).
-  - Deep Learning (Object Detection): Deployed YOLOv8n (nano) for optimized edge-compute vehicle classification.
-  - Classical Vision (Lane Tracking): Utilized Canny Edge Detection and Hough Line Transforms to extract lane boundaries.
-  - Mathematical Filters: Applied an Exponential Moving Average (EMA) to stabilize lane coordinates across frames; used monocular pinhole camera geometry for depth estimation.
-2. Experimental Design & Execution
-  - Pre-processing: Applied fisheye undistortion matrices (balance=0.1, scale=0.7) and dynamic lower-third camera cropping to remove vehicle dashboard glare.
-  - Logic Execution: Processed sequential frames to test three isolated pipelines:
-  - Blindspot: Point-polygon intersection testing.
-  - LDW: Center-screen vs. Lane-center pixel deviation.
-  - Collision: Bounding box width vs. assumed vehicle width ($2.0m$) distance scaling.
-  - Validation: Measured processing latency (FPS) and tracking stability against real-world driving datasets.
-3. Resources & Replication
-  - Open-Source Weights: YOLOv8n model weights accessed via Ultralytics: [Insert Ultralytics Link]
+
+
+*Software and Algorithms*
+
+The core perception pipeline relies on a highly optimized synergy between deep learning frameworks and classical computer vision libraries. The object detection architecture utilizes the Ultralytics micro-framework to deploy the YOLOv8n (nano) model. This specific, lightweight iteration of the YOLO architecture was deliberately selected to optimize vehicle classification speeds on resource-constrained edge hardware.
+
+All classical image manipulation and geometry generation were handled via the OpenCV (cv2) library, while the underlying matrix mathematics and spatial coordinate arrays were managed using NumPy. To extract physical lane boundaries for the Lane Departure Warning (LDW) system, the pipeline utilized Canny Edge Detection coupled with Hough Line Transforms. Because classical line detection is highly susceptible to frame-to-frame visual flickering, an Exponential Moving Average (EMA) mathematical filter was applied to the coordinate arrays to ensure polygon stabilization. Furthermore, the rear collision warning subsystem utilized standard monocular pinhole camera geometry to extrapolate depth estimations from two-dimensional bounding boxes.
+Experimental Design and Execution
+
+The experimental execution processed sequential video frames through three isolated logic pipelines. Prior to feature extraction, all incoming video feeds underwent a strict pre-processing stage. This included applying fisheye undistortion matrices—configured with a balance of 0.1 and a scale of 0.7—to correct lens warping. Additionally, a dynamic lower-third camera crop was applied to eliminate interior vehicle dashboard glare and isolate the critical Region of Interest (ROI) on the roadway.
+
+Following pre-processing, the isolated logic pipelines were executed as follows:
+Blindspot Detection: Hazard alerts were evaluated using point-polygon spatial intersection testing, determining if the bottom-center centroid of a detected vehicle breached predefined geometric "No-Zone" arrays mapped to the side-mirror fields of view.
+
+Lane Departure Warning (LDW): Drift was calculated via dynamic pixel deviation. The algorithm continuously compared the absolute center-screen X-coordinate against the dynamically tracked center of the EMA-stabilized lane polygon.
+
+Rear Collision Warning: Distance scaling was computed by comparing the real-time pixel width of the YOLOv8n bounding boxes against an assumed standard physical vehicle width of 2.0 meters.
+
+System validation was conducted by running the fully integrated pipeline against pre-recorded, real-world driving datasets. Overall system viability was quantified by measuring localized processing latency (Frames Per Second) and evaluating polygon tracking stability across varying environments.
+Resources and Replication
+
+All software components, source code, and model weights have been open-sourced to allow independent researchers to fully replicate this methodology. Furthermore, the complete suite of Python execution scripts, data processing Jupyter Notebooks are hosted on GitHub and can be cloned from [Github Repo link](https://github.com/AryanPJ/SafeSight_Senior). The datasets can be found here [lane Departure Data](https://github.com/rslim087a/road-video/blob/master/test2.mp4), [Blinspot detection and collision warning](https://github.com/valeoai/WoodScape)
+
 
   
 <!-- Rubric checklist:
@@ -100,9 +109,6 @@ Ultimately, this project culminates in a fully localized, functional system capa
 
 ## Software and Environment
 
-You may have SUBSECTIONS. Not required but sometimes helpful.
-
-All source code is available at <https://github.com/yourusername/your-repo>.
 
 | Component        | Detail                          |
 |------------------|---------------------------------|
@@ -115,7 +121,7 @@ All source code is available at <https://github.com/yourusername/your-repo>.
 <!--
 Describe the dataset source, size, and how you obtained it. Provide download links or DOIs. Explain preprocessing steps (cleaning, tokenization, normalization, augmentation, train/validation/test splits) in enough detail for replication.
 --> 
-Datasets were just images and not a lot preprocessing steps were needed except fixing the distortion on the images for blindspot and collision warning. The dataset was split into train and test splits but were not needed as the project used a pretrained model, Yolov8n. 
+The data utilized for system evaluation consisted entirely of two-dimensional image sequences capturing real-world driving environments. Because the perception pipeline leveraged the pre-trained YOLOv8n architecture for zero-shot vehicle classification, localized model training was not required. Consequently, while the dataset was initially structured with standard training and testing partitions, the data was exclusively utilized as a continuous testing and validation benchmark to measure system latency and algorithmic stability. 
 
 <!-- ── Footnote example ─────────────────────────────────────── 
 The dataset was obtained from the UCI Machine Learning Repository[^1].
@@ -125,22 +131,17 @@ The dataset was obtained from the UCI Machine Learning Repository[^1].
 
 ## Algorithm / Approach
 
-Describe your method at a level of detail sufficient for replication. Use pseudocode where it adds clarity:
+1. Spatial Blindspot Detection
+The blindspot subsystem relies on geometric intersection testing. First, the raw camera frame undergoes fisheye undistortion to ensure linear accuracy. Next, the YOLOv8n model scans the frame to extract bounding box coordinates for all detected vehicles. Simultaneously, static "No-Zone" polygons are drawn on the frame, representing the physical blindspots adjacent to the host vehicle. The algorithm calculates the bottom-center centroid of each detected vehicle's bounding box (representing the vehicle's footprint on the road). If this centroid mathematically intersects with the No-Zone polygon, a blindspot alert is triggered.
 
-1. Blindspot detection  
-   - undistorted 
-   - yolo model
-   - create zones
-   - detection if a car is in the zone they are in the blind spot 
-2. Collision warning
-    - undistorted 
-    - etc 
-    - etc 
-    - etc 
-    - collision detection 
-3. Lane departure 
-   - same as collision warning
-   - use previous lane results to influence the current lane results, making the lane detection more accurate. 
+2. Rear Collision Warning 
+The collision warning subsystem utilizes monocular depth estimation. The images were undistorted, YOLOv8n extracts vehicle bounding boxes in the forward path. Because the system lacks a physical depth sensor (like LiDAR), it estimates distance using pinhole camera geometry. The algorithm calculates the perceived pixel width of a detected vehicle and compares it against an assumed physical vehicle width (standardized to 2.0 meters) and the camera's known focal length. If the calculated physical distance falls below a critical safety threshold, a collision warning is activated.
+
+3. Lane Departure Warning (LDW) with EMA Stabilization
+The lane tracking subsystem utilizes classical computer vision enhanced by mathematical filtering. After undistorted the image, a dynamic Region of Interest (ROI) mask is applied to isolate the lower third of the frame (the roadway). Canny Edge Detection and Hough Line Transforms extract the physical lane boundaries, which are then used to construct a lane polygon.
+The line detection inherently flickers between frames due to varying road conditions, an Exponential Moving Average (EMA) filter is applied. The EMA utilizes the mathematical coordinates of the previous frame's lane lines to heavily influence the current frame's lines, effectively smoothing the data and locking the polygon in place. Finally, the algorithm continuously tracks the absolute pixel center of this stabilized polygon against the static center of the camera frame; significant pixel deviation indicates a lane departure.
+
+ 
   
 
 ## Experimental Design
@@ -160,15 +161,50 @@ The main metric that was measured was the speed that the systems ran on a raspbe
 
 ## Quantitative Results
 
-results of the systems running on the raspberry pi 5 at some fps. 
-
+The systems was able to run on a Raspberry Pi 5 at a consistent 3-6 fps. It was near the higher end when blindspot detection, which is expected as it mainly utilizes the YOLO model to detect cars and if they are in a certain region it give the user a warning. For the other two systems it ran slower as there was a lot more steps involved between preprocessing the images to get them ready for lane and car detection. 
 
 ## Figures and Visualizations
- Images of each of the three systems running, and maybe even the smaller steps in the sytem like canny edge, hough, etc. 
+
+**Blindspot Detection** 
+
+![Fisheye Data Utilized for Blindspot Detection.](figures/Blindspot_Detection_Fisheye.png)
 
 
-## Final Product
-Current plan of making a website in which you can upload you own set of images 
+![Data Undistorted with a Focus on the Regions Around the Car.](figures/Blindspot_undistorted_fisheye.png)
+
+
+![YOLOv8n Model Utilized on the Image.](figures/Blindspot_YOLO.png)
+
+![Blindspot Region Created.](figures/Blindspot_Zones.png)
+
+**Lane Collision**
+
+![Fisheye Example for Collision Warning.](figures/Collisions_Data.png)
+
+![Data Undistorted with a Focus on Depth.](figures/Collision_Undistorted.png)
+
+![Canny Edge Detection.](figures/Collision_Canny.png)
+
+![Created a Region of Interest.](figures/Collision_ROI.png)
+
+![Hough Line Detection to Detect Possible Right and Left Lane Markings](figures/Collision_Hough.png)
+
+![Zone Created of the Lane.](figures/Collision_Lane.png)
+
+**Lane Departure Warning**
+Lane departure warning contains the same steps as collision warning up until EMA, shown below: 
+
+![Frame 89 without EMA.](figures/Departure_89.png)
+
+![Frame 90 without EMA.](figures/Departure_90.png)
+
+![Frame 90 with EMA and Departure Warning.](figures/Departure_EMA_Detection.png)
+
+# Final Product
+
+A website has been made that allows the user to test out the systems. By allowing the user to upload images and also to change any parameters they wish. 
+
+![Image of current website](figures/website.png)
 
 
 
@@ -180,17 +216,13 @@ Current plan of making a website in which you can upload you own set of images
        ✓ Reflect on future possible work
 -->
 
-1. Summary & Context
-  - Goal achieved: Replaced expensive LiDAR/Radar with a vision-only software pipeline (YOLOv8n + CV) on a $180 Raspberry Pi 5.
-  - Final Results: System successfully runs at a stable 5-6 FPS, featuring EMA-stabilized lane tracking and accurate monocular depth estimation.
-2. Limitations & "Regrets"
-  - Hardware bottleneck: The Pi 5 forced the use of the "nano" YOLOv8 model, reducing long-range detection accuracy.
-  - Sensor vulnerability: Purely optical systems inherently fail in bad weather (rain, fog, glare).
-  - Testing limits: Subsystems were validated independently; regret lacking a unified, multi-camera physical vehicle rig for synchronous testing.
-3. Future Work
-  - Compute Upgrade: Migrate to dedicated AI accelerators (Google Coral TPU / NVIDIA Jetson) to achieve 30+ FPS.
-  - Sensor Fusion: Integrate cheap mmWave radar to overcome camera weather vulnerabilities.
-  - Vehicle Integration: Interface with the vehicle's CAN-bus to transition from passive warnings to active emergency braking (Level 1 Autonomy).
+The SafeSight project successfully demonstrates that advanced, predictive vehicle safety systems do not inherently require prohibitive hardware investments. By supplanting traditional sensor fusion arrays—such as LiDAR and radar—with a purely vision-based software pipeline, this research establishes the viability of democratized Advanced Driver Assistance Systems (ADAS). Operating entirely on an accessible $180 Raspberry Pi 5 microcomputer, the hybrid architecture successfully merged YOLOv8n deep learning with classical computer vision techniques to maintain a stable localized processing rate of 5–6 FPS. Furthermore, the integration of Exponential Moving Average (EMA) mathematical filters successfully mitigated visual flickering to provide highly stable lane tracking, while standard pinhole camera geometry proved highly effective for monocular depth estimation.
+
+Despite these functional successes, the project's reliance on localized edge computing introduced notable operational constraints. The primary hardware bottleneck of the Raspberry Pi 5 necessitated the deployment of the lightweight "nano" variant of the YOLOv8 architecture, which inherently compromises long-range detection accuracy compared to its larger parameter counterparts. Additionally, relying exclusively on an optical perception pipeline introduces fundamental environmental vulnerabilities; purely monocular systems are highly susceptible to failure under adverse conditions such as heavy rain, fog, or direct solar glare. Retrospectively, while the individual subsystems were rigorously validated in isolated testing environments, a primary regret of this project scope is the absence of a unified, multi-camera physical vehicle rig, which would have facilitated synchronous, real-world testing of the fully integrated pipeline.
+
+Looking forward, future iterations of this framework must prioritize hardware acceleration to achieve true real-time operational standards. Migrating the core perception pipeline to dedicated AI microcomputers, such as the NVIDIA Jetson or Google Coral TPU, would enable the system to easily surpass the 30 FPS real-time threshold. To address the inherent environmental vulnerabilities of optical lenses, future architectures should explore low-cost sensor fusion by integrating affordable millimeter-wave (mmWave) radar modules, ensuring necessary functional redundancy. Furthermore, this project could be transformed a little bit in order to work for motorcycles, as features such as rear end collision warning is really useful for motorists. This is because at red lights or stop signs a motorist is more likely to be rear ended as they are harder to see, especially if the driver is using their phone or preoccupied with something else. Thus, a small system to help them detect rear end collisions could prove to help the motorists to avoid collision or at least give them enough time to properly brace themselves for a collision. 
+
+
 
 
 # References {-}
