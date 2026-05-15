@@ -29,6 +29,9 @@ app = FastAPI(
     title="SafeSight ADAS API",
     version="0.1.0",
     description="Lane departure warning and rear collision detection as a REST service.",
+    openapi_url=None,
+    docs_url=None,
+    redoc_url=None,
 )
 
 
@@ -48,12 +51,6 @@ def _load_upload(upload: UploadFile) -> np.ndarray:
     if image is None:
         raise HTTPException(status_code=400, detail="Could not decode the uploaded image.")
     return image
-
-
-@app.get("/health")
-async def health():
-    """Simple liveness check."""
-    return {"status": "ok"}
 
 
 @app.post("/analyze")
