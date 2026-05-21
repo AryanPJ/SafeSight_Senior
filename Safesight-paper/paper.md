@@ -56,7 +56,7 @@ Blindspot Detection: A spatial geometric "No-Zone" mapping system that detects a
 
 Lane Departure Warning (LDW): A robust lane-tracking system uniquely stabilized by an Exponential Moving Average (EMA) algorithm, effectively eliminating visual polygon flickering across sequential frames.
 
-Forward Collision Warning: A LiDAR-free, monocular depth-estimation tool that accurately calculates vehicle proximity using  camera geometry.
+Rear Collision Warning: A LiDAR-free, monocular depth-estimation tool that accurately calculates vehicle proximity using  camera geometry.
 
 Ultimately, this project culminates in a fully localized, functional system capable of running concurrent video safety feeds at a stable 3–6 Frames Per Second (FPS) on the Raspberry Pi 5, proving that advanced predictive safety can be effectively and affordably retrofitted.
 
@@ -75,24 +75,24 @@ Ultimately, this project culminates in a fully localized, functional system capa
 
 # Procedure
 
-
 *Software and Algorithms*
 
-The core perception pipeline relies on a highly optimized synergy between deep learning frameworks and classical computer vision libraries. The object detection architecture utilizes the Ultralytics micro-framework to deploy the YOLOv8n (nano) model. This specific, lightweight iteration of the YOLO architecture was deliberately selected to optimize vehicle classification speeds on resource-constrained edge hardware.
+The core perception pipeline relies on deep learning frameworks and classical computer vision libraries. The object detection architecture utilizes the Ultralytics micro-framework to deploy the YOLOv8n (nano) model. This specific, lightweight iteration of the YOLO architecture was deliberately selected to optimize vehicle classification speeds on resource-constrained edge hardware.
 
-All classical image manipulation and geometry generation were handled via the OpenCV (cv2) library, while the underlying matrix mathematics and spatial coordinate arrays were managed using NumPy. To extract physical lane boundaries for the Lane Departure Warning (LDW) system, the pipeline utilized Canny Edge Detection coupled with Hough Line Transforms. Because classical line detection is highly susceptible to frame-to-frame visual flickering, an Exponential Moving Average (EMA) mathematical filter was applied to the coordinate arrays to ensure polygon stabilization. Furthermore, the rear collision warning subsystem utilized standard monocular pinhole camera geometry to extrapolate depth estimations from two-dimensional bounding boxes.
+All classical image manipulation and geometry generation were handled via the OpenCV (cv2) library, while the underlying matrix mathematics and spatial coordinate arrays were managed using NumPy. To extract physical lane boundaries for the Lane Departure Warning (LDW) system, the pipeline utilized Canny Edge Detection coupled with Hough Line Transforms. Because classical line detection is highly susceptible to frame-to-frame visual flickering, an Exponential Moving Average (EMA) mathematical filter was applied to the coordinate arrays to ensure lane stabilization. Furthermore, the rear collision warning subsystem utilized standard monocular camera geometry to extrapolate depth estimations from two-dimensional bounding boxes.
 Experimental Design and Execution
 
-The experimental execution processed sequential video frames through three isolated logic pipelines. Prior to feature extraction, all incoming video feeds underwent a strict pre-processing stage. This included applying fisheye undistortion matrices—configured with a balance of 0.1 and a scale of 0.7—to correct lens warping. Additionally, a dynamic lower-third camera crop was applied to eliminate interior vehicle dashboard glare and isolate the critical Region of Interest (ROI) on the roadway.
+The experimental execution processed sequential video frames through three isolated logic pipelines. Prior to feature extraction, all incoming video feeds underwent a  pre-processing stage. This included applying fisheye undistortion matrices—configured with a balance of 0.1 and a scale of 0.7—to correct lens warping. Additionally, a lower-third of the camera was cropped was applied to eliminate interior vehicle dashboard interfering with detections, and creating a Region of Interest (ROI) on the roadway.
 
 Following pre-processing, the isolated logic pipelines were executed as follows:
-Blindspot Detection: Hazard alerts were evaluated using point-polygon spatial intersection testing, determining if the bottom-center centroid of a detected vehicle breached predefined geometric "No-Zone" arrays mapped to the side-mirror fields of view.
+Blindspot Detection: Hazard alerts were evaluated using point-polygon spatial intersection testing, determining if the bottom-center of the bounding box of a detected vehicle breached predefined geometric "No-Zone" arrays mapped to the side-mirror fields of view.
 
 Lane Departure Warning (LDW): Drift was calculated via dynamic pixel deviation. The algorithm continuously compared the absolute center-screen X-coordinate against the dynamically tracked center of the EMA-stabilized lane polygon.
 
 Rear Collision Warning: Distance scaling was computed by comparing the real-time pixel width of the YOLOv8n bounding boxes against an assumed standard physical vehicle width of 2.0 meters.
 
 System validation was conducted by running the fully integrated pipeline against pre-recorded, real-world driving datasets. Overall system viability was quantified by measuring localized processing latency (Frames Per Second) and evaluating polygon tracking stability across varying environments.
+
 Resources and Replication
 
 All software components, source code, and model weights have been open-sourced to allow independent researchers to fully replicate this methodology. Furthermore, the complete suite of Python execution scripts, data processing Jupyter Notebooks are hosted on GitHub and can be cloned from [Github Repo link](https://github.com/AryanPJ/SafeSight_Senior). The datasets can be found here [lane Departure Data](https://github.com/rslim087a/road-video/blob/master/test2.mp4), [Blinspot detection and collision warning](https://github.com/valeoai/WoodScape)
@@ -112,7 +112,7 @@ All software components, source code, and model weights have been open-sourced t
 
 | Component        | Detail                          |
 |------------------|---------------------------------|
-| Language         | Python 3.11.9                     |
+| Language         | Python 3.11.9                   |
 | ML Framework     | PyTorch 2.3                     |
 | Key Libraries    | OpenCV and NumPy    |
 | Hardware         | Raspberry pi 5    |
@@ -131,13 +131,13 @@ The dataset was obtained from the UCI Machine Learning Repository[^1].
 
 ## Algorithm / Approach
 
-1. Spatial Blindspot Detection
+1. Spatial Blindspot Detection     
 The blindspot subsystem relies on geometric intersection testing. First, the raw camera frame undergoes fisheye undistortion to ensure linear accuracy. Next, the YOLOv8n model scans the frame to extract bounding box coordinates for all detected vehicles. Simultaneously, static "No-Zone" polygons are drawn on the frame, representing the physical blindspots adjacent to the host vehicle. The algorithm calculates the bottom-center centroid of each detected vehicle's bounding box (representing the vehicle's footprint on the road). If this centroid mathematically intersects with the No-Zone polygon, a blindspot alert is triggered.
 
-2. Rear Collision Warning 
+2. Rear Collision Warning     
 The collision warning subsystem utilizes monocular depth estimation. The images were undistorted, YOLOv8n extracts vehicle bounding boxes in the forward path. Because the system lacks a physical depth sensor (like LiDAR), it estimates distance using pinhole camera geometry. The algorithm calculates the perceived pixel width of a detected vehicle and compares it against an assumed physical vehicle width (standardized to 2.0 meters) and the camera's known focal length. If the calculated physical distance falls below a critical safety threshold, a collision warning is activated.
 
-3. Lane Departure Warning (LDW) with EMA Stabilization
+3. Lane Departure Warning (LDW) with EMA Stabilization    
 The lane tracking subsystem utilizes classical computer vision enhanced by mathematical filtering. After undistorted the image, a dynamic Region of Interest (ROI) mask is applied to isolate the lower third of the frame (the roadway). Canny Edge Detection and Hough Line Transforms extract the physical lane boundaries, which are then used to construct a lane polygon.
 The line detection inherently flickers between frames due to varying road conditions, an Exponential Moving Average (EMA) filter is applied. The EMA utilizes the mathematical coordinates of the previous frame's lane lines to heavily influence the current frame's lines, effectively smoothing the data and locking the polygon in place. Finally, the algorithm continuously tracks the absolute pixel center of this stabilized polygon against the static center of the camera frame; significant pixel deviation indicates a lane departure.
 
@@ -216,7 +216,7 @@ A website has been made that allows the user to test out the systems. By allowin
        ✓ Reflect on future possible work
 -->
 
-The SafeSight project successfully demonstrates that advanced, predictive vehicle safety systems do not inherently require prohibitive hardware investments. By supplanting traditional sensor fusion arrays—such as LiDAR and radar—with a purely vision-based software pipeline, this research establishes the viability of democratized Advanced Driver Assistance Systems (ADAS). Operating entirely on an accessible $180 Raspberry Pi 5 microcomputer, the hybrid architecture successfully merged YOLOv8n deep learning with classical computer vision techniques to maintain a stable localized processing rate of 5–6 FPS. Furthermore, the integration of Exponential Moving Average (EMA) mathematical filters successfully mitigated visual flickering to provide highly stable lane tracking, while standard pinhole camera geometry proved highly effective for monocular depth estimation.
+The SafeSight project successfully demonstrates that advanced, predictive vehicle safety systems do not inherently require prohibitive hardware investments. By supplanting traditional sensor fusion arrays—such as LiDAR and radar—with a purely vision-based software pipeline, this research establishes the viability of democratized Advanced Driver Assistance Systems (ADAS). Operating entirely on an accessible $180 Raspberry Pi 5 microcomputer, the hybrid architecture successfully merged YOLOv8n deep learning with classical computer vision techniques to maintain a stable localized processing rate of 3–6 FPS. Furthermore, the integration of Exponential Moving Average (EMA) mathematical filters successfully mitigated visual flickering to provide highly stable lane tracking, while standard pinhole camera geometry proved highly effective for monocular depth estimation.
 
 Despite these functional successes, the project's reliance on localized edge computing introduced notable operational constraints. The primary hardware bottleneck of the Raspberry Pi 5 necessitated the deployment of the lightweight "nano" variant of the YOLOv8 architecture, which inherently compromises long-range detection accuracy compared to its larger parameter counterparts. Additionally, relying exclusively on an optical perception pipeline introduces fundamental environmental vulnerabilities; purely monocular systems are highly susceptible to failure under adverse conditions such as heavy rain, fog, or direct solar glare. Retrospectively, while the individual subsystems were rigorously validated in isolated testing environments, a primary regret of this project scope is the absence of a unified, multi-camera physical vehicle rig, which would have facilitated synchronous, real-world testing of the fully integrated pipeline.
 
